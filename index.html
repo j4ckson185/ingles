@@ -390,20 +390,80 @@
     </style>
 </head>
 <body>
-    <!-- Rest of the HTML structure remains the same until the script tag -->
-    
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">EnglishAI</div>
+                <div class="nav-links">
+                    <a href="#cursos">Cursos</a>
+                    <a href="#sobre">Sobre</a>
+                    <a href="#contato">Contato</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="hero">
+                <h1>Aprenda Inglês com Inteligência Artificial</h1>
+                <p>Cursos interativos personalizados para seu nível e objetivos</p>
+                <button class="btn btn-primary">Começar Agora</button>
+            </section>
+
+            <div class="courses-grid">
+                <div class="course-card" data-course="basic">
+                    <div class="course-image">
+                        <img src="/api/placeholder/400/320" alt="Curso Básico">
+                    </div>
+                    <div class="course-content">
+                        <h3>Inglês Básico</h3>
+                        <p>Aprenda os fundamentos do inglês com exercícios práticos</p>
+                        <button class="btn btn-primary" onclick="startCourse('basic')">Iniciar</button>
+                    </div>
+                </div>
+
+                <div class="course-card" data-course="intermediate">
+                    <div class="course-image">
+                        <img src="/api/placeholder/400/320" alt="Curso Intermediário">
+                    </div>
+                    <div class="course-content">
+                        <h3>Inglês Intermediário</h3>
+                        <p>Aprimore suas habilidades com conteúdo avançado</p>
+                        <button class="btn btn-primary" onclick="startCourse('intermediate')">Iniciar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="lessonModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 id="lessonTitle">Título da Aula</h2>
+            <div class="lesson-video">
+                <div class="video-container">
+                    <div class="ai-avatar">🤖</div>
+                    <p id="videoContent"></p>
+                </div>
+            </div>
+            <div id="lessonContent"></div>
+            <div id="exerciseSection" class="exercise-section"></div>
+        </div>
+    </div>
+
     <script>
         // Speech synthesis setup
         const synth = window.speechSynthesis;
         let voices = [];
 
         function loadVoices() {
-        voices = synth.getVoices();
-}
+            voices = synth.getVoices();
+        }
 
-if (speechSynthesis.onvoiceschanged !== undefined) {
-    speechSynthesis.onvoiceschanged = loadVoices;
-}
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = loadVoices;
+        }
         
         // Speech recognition setup
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -427,22 +487,18 @@ if (speechSynthesis.onvoiceschanged !== undefined) {
                         {
                             text: "Elephant",
                             correctPhonetics: "ˈɛləfənt"
-                        },
-                        // Add more pronunciation exercises
+                        }
                     ],
                     exercises: [
-    {
-        question: "Como se pronuncia a letra 'A' em inglês?",
-        options: ["ei", "ai", "ah", "é"],
-        correct: 0,
-        questionText: "How do you pronounce the letter A in English?"
-    }
-]
-                        // Add more exercises (total 20 per lesson)
-                },
-                // Add more lessons with similar structure
-            ],
-            // Add intermediate and advanced levels with similar structure
+                        {
+                            question: "Como se pronuncia a letra 'A' em inglês?",
+                            options: ["ei", "ai", "ah", "é"],
+                            correct: 0,
+                            questionText: "How do you pronounce the letter A in English?"
+                        }
+                    ]
+                }
+            ]
         };
 
         let currentCourse = null;
@@ -450,17 +506,17 @@ if (speechSynthesis.onvoiceschanged !== undefined) {
         let currentExerciseIndex = 0;
         let isRecording = false;
 
-function speak(text) {
-    if (!voices.length) {
-        voices = synth.getVoices();
-    }
-    
-    const utterance = new SpeechSynthesisUtterance(text);
-    const englishVoice = voices.find(voice => voice.lang === 'en-US');
-    utterance.voice = englishVoice || voices[0];
-    utterance.rate = 0.9;
-    synth.speak(utterance);
-}
+        function speak(text) {
+            if (!voices.length) {
+                voices = synth.getVoices();
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            const englishVoice = voices.find(voice => voice.lang === 'en-US');
+            utterance.voice = englishVoice || voices[0];
+            utterance.rate = 0.9;
+            synth.speak(utterance);
+        }
 
         function startRecording() {
             isRecording = true;
@@ -482,14 +538,11 @@ function speak(text) {
         };
 
         function comparePronunciation(spoken, correct) {
-            // Implement pronunciation comparison logic
-            // This could be enhanced with a proper phonetic comparison library
             const similarity = levenshteinDistance(spoken, correct);
-            return similarity > 0.8; // Threshold for acceptable pronunciation
+            return similarity > 0.8;
         }
 
         function levenshteinDistance(a, b) {
-            // Implement Levenshtein distance algorithm for basic string similarity
             if (a.length === 0) return b.length;
             if (b.length === 0) return a.length;
 
@@ -522,253 +575,238 @@ function speak(text) {
             return 1 - (matrix[b.length][a.length] / Math.max(a.length, b.length));
         }
 
-     function showPronunciationFeedback(isGood) {
-    const feedback = document.querySelector('.pronunciation-feedback');
-    feedback.style.display = 'block';
-    feedback.className = 'pronunciation-feedback ' + (isGood ? 'feedback-good' : 'feedback-bad');
-    feedback.textContent = isGood ? 
-        'Excelente pronúncia! Continue assim!' : 
-        'Tente novamente. Escute o áudio e pratique mais.';
-    
-    setTimeout(() => {
-        feedback.style.display = 'none';
-    }, 3000);
-}
+        function showPronunciationFeedback(isGood) {
+            const feedback = document.querySelector('.pronunciation-feedback');
+            feedback.style.display = 'block';
+            feedback.className = 'pronunciation-feedback ' + (isGood ? 'feedback-good' : 'feedback-bad');
+            feedback.textContent = isGood ? 
+                'Excelente pronúncia! Continue assim!' : 
+                'Tente novamente. Escute o áudio e pratique mais.';
+            
+            setTimeout(() => {
+                feedback.style.display = 'none';
+            }, 3000);
+        }
 
-function updateLesson() {
-    const lesson = lessons[currentCourse][currentLessonIndex];
-    const totalLessons = lessons[currentCourse].length;
-    const progress = ((currentLessonIndex + 1) / totalLessons) * 100;
-    
-    document.getElementById('lessonTitle').textContent = lesson.title;
-    document.getElementById('lessonProgress').style.width = `${progress}%`;
-    document.getElementById('videoContent').textContent = "AI Teacher: " + lesson.videoScript;
-    
-    // Update lesson content
-    document.getElementById('lessonContent').innerHTML = `
-        <h3>Conteúdo da Aula</h3>
-        <p>${lesson.content}</p>
-        
-        <div class="audio-controls">
-            <button class="audio-btn" onclick="speak('${lesson.videoScript}')">
-                <i class="fas fa-play"></i> Ouvir Explicação
-            </button>
-        </div>
-        
-        <div class="pronunciation-section">
-            <h3>Exercício de Pronúncia</h3>
-            <p>Repita a palavra: <strong>${lesson.pronunciationExercises[0].text}</strong></p>
-            <div class="pronunciation-controls">
-                <button class="audio-btn" onclick="speak('${lesson.pronunciationExercises[0].text}')">
-                    <i class="fas fa-volume-up"></i> Ouvir Palavra
-                </button>
-                <button class="audio-btn microphone-btn" onclick="toggleRecording()">
-                    <i class="fas fa-microphone"></i> Gravar Pronúncia
-                </button>
-            </div>
-            <div class="pronunciation-feedback"></div>
-        </div>
-    `;
-    
-    updateExercise();
-    startVideoSimulation();
-}
-
-function updateExercise() {
-    const lesson = lessons[currentCourse][currentLessonIndex];
-    const exercise = lesson.exercises[currentExerciseIndex];
-    const totalExercises = lesson.exercises.length;
-    
-    document.getElementById('exerciseSection').innerHTML = `
-        <div class="exercise-progress">
-            <span>Exercício ${currentExerciseIndex + 1} de ${totalExercises}</span>
-            <span>Progresso: ${Math.round((currentExerciseIndex / totalExercises) * 100)}%</span>
-        </div>
-        <h3>Exercício</h3>
-        <p>${exercise.question}</p>
-        <div class="audio-controls">
-            <button class="audio-btn" onclick="speak('${exercise.questionText}')">
-                <i class="fas fa-volume-up"></i> Ouvir Questão
-            </button>
-        </div>
-        <div class="exercise-options">
-            ${exercise.options.map((option, index) => `
-                <div class="exercise-option" onclick="checkAnswer(${index}, ${exercise.correct})">
-                    ${option}
+        function updateLesson() {
+            const lesson = lessons[currentCourse][currentLessonIndex];
+            const totalLessons = lessons[currentCourse].length;
+            const progress = ((currentLessonIndex + 1) / totalLessons) * 100;
+            
+            document.getElementById('lessonTitle').textContent = lesson.title;
+            document.getElementById('lessonProgress').style.width = `${progress}%`;
+            document.getElementById('videoContent').textContent = "AI Teacher: " + lesson.videoScript;
+            
+            document.getElementById('lessonContent').innerHTML = `
+                <h3>Conteúdo da Aula</h3>
+                <p>${lesson.content}</p>
+                
+                <div class="audio-controls">
+                    <button class="audio-btn" onclick="speak('${lesson.videoScript}')">
+                        <i class="fas fa-play"></i> Ouvir Explicação
+                    </button>
                 </div>
-            `).join('')}
-        </div>
-    `;
-}
-
-function toggleRecording() {
-    if (isRecording) {
-        stopRecording();
-    } else {
-        startRecording();
-    }
-}
-
-function checkAnswer(selected, correct) {
-    const options = document.querySelectorAll('.exercise-option');
-    options[selected].classList.add(selected === correct ? 'correct' : 'wrong');
-    options[correct].classList.add('correct');
-    
-    setTimeout(() => {
-        options.forEach(option => {
-            option.classList.remove('correct', 'wrong');
-        });
-        
-        // Move to next exercise or lesson
-        if (currentExerciseIndex < lessons[currentCourse][currentLessonIndex].exercises.length - 1) {
-            currentExerciseIndex++;
+                
+                <div class="pronunciation-section">
+                    <h3>Exercício de Pronúncia</h3>
+                    <p>Repita a palavra: <strong>${lesson.pronunciationExercises[0].text}</strong></p>
+                    <div class="pronunciation-controls">
+                        <button class="audio-btn" onclick="speak('${lesson.pronunciationExercises[0].text}')">
+                            <i class="fas fa-volume-up"></i> Ouvir Palavra
+                        </button>
+                        <button class="audio-btn microphone-btn" onclick="toggleRecording()">
+                            <i class="fas fa-microphone"></i> Gravar Pronúncia
+                        </button>
+                    </div>
+                    <div class="pronunciation-feedback"></div>
+                </div>
+            `;
+            
             updateExercise();
-        } else {
-            // Complete lesson
+            startVideoSimulation();
+        }
+
+        function updateExercise() {
+            const lesson = lessons[currentCourse][currentLessonIndex];
+            const exercise = lesson.exercises[currentExerciseIndex];
+            const totalExercises = lesson.exercises.length;
+            
+            document.getElementById('exerciseSection').innerHTML = `
+                <div class="exercise-progress">
+                    <span>Exercício ${currentExerciseIndex + 1} de ${totalExercises}</span>
+                    <span>Progresso: ${Math.round((currentExerciseIndex / totalExercises) * 100)}%</span>
+                </div>
+                <h3>Exercício</h3>
+                <p>${exercise.question}</p>
+                <div class="audio-controls">
+                    <button class="audio-btn" onclick="speak('${exercise.questionText}')">
+                        <i class="fas fa-volume-up"></i> Ouvir Questão
+                    </button>
+                </div>
+                <div class="exercise-options">
+                    ${exercise.options.map((option, index) => `
+                        <div class="exercise-option" onclick="checkAnswer(${index}, ${exercise.correct})">
+                            ${option}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function toggleRecording() {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+
+        function checkAnswer(selected, correct) {
+            const options = document.querySelectorAll('.exercise-option');
+            options[selected].classList.add(selected === correct ? 'correct' : 'wrong');
+            options[correct].classList.add('correct');
+            
+            setTimeout(() => {
+                options.forEach(option => {
+                    option.classList.remove('correct', 'wrong');
+                });
+                
+                if (currentExerciseIndex < lessons[currentCourse][currentLessonIndex].exercises.length - 1) {
+                    currentExerciseIndex++;
+                    updateExercise();
+                } else {
+                    currentExerciseIndex = 0;
+                    nextLesson();
+                }
+            }, 2000);
+        }
+
+        function startCourse(courseType) {
+            currentCourse = courseType;
+            currentLessonIndex = 0;
             currentExerciseIndex = 0;
-            nextLesson();
+            document.getElementById('lessonModal').style.display = 'block';
+            updateLesson();
         }
-    }, 2000);
-}
 
-function nextLesson() {
-    if (currentLessonIndex < lessons[currentCourse].length - 1) {
-        currentLessonIndex++;
-        updateLesson();
-    } else {
-        alert('Parabéns! Você completou este módulo! 🎉');
-        closeModal();
-    }
-}
-
-function startVideoSimulation() {
-    const videoContent = document.getElementById('videoContent');
-    const lesson = lessons[currentCourse][currentLessonIndex];
-    let index = 0;
-    
-    function typeWriter() {
-        if (index < lesson.videoScript.length) {
-            videoContent.textContent = "AI Teacher: " + lesson.videoScript.slice(0, index + 1);
-            index++;
-            setTimeout(typeWriter, 50);
+        function closeModal() {
+            document.getElementById('lessonModal').style.display = 'none';
+            saveProgress();
         }
-    }
-    
-    typeWriter();
-}
 
-// Initialize voices when they are loaded
-speechSynthesis.onvoiceschanged = function() {
-    voices = synth.getVoices();
-};
+        function nextLesson() {
+            if (currentLessonIndex < lessons[currentCourse].length - 1) {
+                currentLessonIndex++;
+                updateLesson();
+            } else {
+                alert('Parabéns! Você completou este módulo! 🎉');
+                closeModal();
+            }
+        }
 
-// Event handlers for window load and modal
-window.onload = function() {
-    // Pre-load audio files
-    lessons.basic.forEach(lesson => {
-        lesson.exercises.forEach(exercise => {
-            if (exercise.audio) {
-                const audio = new Audio(exercise.audio);
-                audio.preload = 'auto';
+        function startVideoSimulation() {
+            const videoContent = document.getElementById('videoContent');
+            const lesson = lessons[currentCourse][currentLessonIndex];
+            let index = 0;
+            
+            function typeWriter() {
+                if (index < lesson.videoScript.length) {
+                    videoContent.textContent = "AI Teacher: " + lesson.videoScript.slice(0, index + 1);
+                    index++;
+                    setTimeout(typeWriter, 50);
+                }
+            }
+            
+            typeWriter();
+        }
+
+        function getCurrentPronunciationExercise() {
+            return lessons[currentCourse][currentLessonIndex].pronunciationExercises[0];
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedProgress = localStorage.getItem('englishAIProgress');
+            if (savedProgress) {
+                const progress = JSON.parse(savedProgress);
+                currentCourse = progress.course;
+                currentLessonIndex = progress.lesson;
+                currentExerciseIndex = progress.exercise;
+            }
+            updateCourseCards();
+        });
+
+        function updateCourseCards() {
+            Object.keys(lessons).forEach(courseType => {
+                const card = document.querySelector(`[data-course="${courseType}"]`);
+                if (card) {
+                    const progress = calculateCourseProgress(courseType);
+                    const progressBar = card.querySelector('.course-progress');
+                    if (progressBar) {
+                        progressBar.style.width = `${progress}%`;
+                    }
+                }
+            });
+        }
+
+        function calculateCourseProgress(courseType) {
+            if (!localStorage.getItem('englishAIProgress')) return 0;
+            
+            const progress = JSON.parse(localStorage.getItem('englishAIProgress'));
+            if (progress.course !== courseType) return 0;
+            
+            return (progress.lesson / lessons[courseType].length) * 100;
+        }
+
+        function saveProgress() {
+            const progress = {
+                course: currentCourse,
+                lesson: currentLessonIndex,
+                exercise: currentExerciseIndex
+            };
+            localStorage.setItem('englishAIProgress', JSON.stringify(progress));
+            updateCourseCards();
+        }
+
+        // Visibility change handler
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                synth.pause();
+            } else {
+                synth.resume();
             }
         });
-    });
-};
 
-window.onclick = function(event) {
-    const modal = document.getElementById('lessonModal');
-    if (event.target == modal) {
-        closeModal();
-    }
-};
-
-// Error handling for speech recognition
-recognition.onerror = function(event) {
-    console.error('Speech recognition error:', event.error);
-    stopRecording();
-    showPronunciationFeedback(false);
-};
-
-// Handle cases where speech recognition is not supported
-if (!SpeechRecognition) {
-    const pronunciationSections = document.querySelectorAll('.pronunciation-section');
-    pronunciationSections.forEach(section => {
-        section.innerHTML = `
-            <div class="warning">
-                Seu navegador não suporta reconhecimento de voz.
-                Por favor, use um navegador mais recente como Chrome ou Edge.
-            </div>
-        `;
-    });
-}
-
-// Initialize the application
-document.addEventListener('DOMContentLoaded', function() {
-    // Load saved progress if any
-    const savedProgress = localStorage.getItem('englishAIProgress');
-    if (savedProgress) {
-        const progress = JSON.parse(savedProgress);
-        currentCourse = progress.course;
-        currentLessonIndex = progress.lesson;
-        currentExerciseIndex = progress.exercise;
-    }
-
-    // Initialize course cards with progress indicators
-    updateCourseCards();
-});
-
-function updateCourseCards() {
-    Object.keys(lessons).forEach(courseType => {
-        const card = document.querySelector(`[data-course="${courseType}"]`);
-        if (card) {
-            const progress = calculateCourseProgress(courseType);
-            const progressBar = card.querySelector('.course-progress');
-            if (progressBar) {
-                progressBar.style.width = `${progress}%`;
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            if (event.code === 'Space' && event.target === document.body) {
+                event.preventDefault();
+                toggleRecording();
             }
+            if (event.code === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Error handling for speech recognition
+        recognition.onerror = function(event) {
+            console.error('Speech recognition error:', event.error);
+            stopRecording();
+            showPronunciationFeedback(false);
+        };
+
+        // Handle browser support for speech recognition
+        if (!SpeechRecognition) {
+            const pronunciationSections = document.querySelectorAll('.pronunciation-section');
+            pronunciationSections.forEach(section => {
+                section.innerHTML = `
+                    <div class="warning">
+                        Seu navegador não suporta reconhecimento de voz.
+                        Por favor, use um navegador mais recente como Chrome ou Edge.
+                    </div>
+                `;
+            });
         }
-    });
-}
-
-function calculateCourseProgress(courseType) {
-    if (!localStorage.getItem('englishAIProgress')) return 0;
-    
-    const progress = JSON.parse(localStorage.getItem('englishAIProgress'));
-    if (progress.course !== courseType) return 0;
-    
-    return (progress.lesson / lessons[courseType].length) * 100;
-}
-
-function saveProgress() {
-    const progress = {
-        course: currentCourse,
-        lesson: currentLessonIndex,
-        exercise: currentExerciseIndex
-    };
-    localStorage.setItem('englishAIProgress', JSON.stringify(progress));
-    updateCourseCards();
-}
-
-// Handle page visibility changes to pause/resume audio
-document.addEventListener('visibilitychange', function() {
-    if (document.hidden) {
-        synth.pause();
-    } else {
-        synth.resume();
-    }
-});
-
-// Keyboard shortcuts
-document.addEventListener('keydown', function(event) {
-    if (event.code === 'Space' && event.target === document.body) {
-        event.preventDefault(); // Prevent page scroll
-        toggleRecording();
-    }
-    if (event.code === 'Escape') {
-        closeModal();
-    }
-});
-
     </script>
     
     <!-- Font Awesome for icons -->
