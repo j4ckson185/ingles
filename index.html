@@ -1,45 +1,342 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curso de Inglês com IA</title>
-    <link rel="stylesheet" href="styles.css">
-    <script defer src="script.js"></script>
+    <title>EnglishAI - Curso de Inglês</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --secondary: #1d4ed8;
+            --light: #f3f4f6;
+            --dark: #1f2937;
+        }
+
+        body {
+            background-color: var(--light);
+        }
+
+        .navbar {
+            background-color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .main-content {
+            margin-top: 5rem;
+            padding: 2rem 0;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            background-color: white;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .course-card {
+            background-color: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .course-image {
+            width: 100%;
+            height: 200px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .course-content {
+            padding: 1.5rem;
+        }
+
+        .course-content h3 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .course-content p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            border-radius: 1rem;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .lesson-video {
+            width: 100%;
+            aspect-ratio: 16/9;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <header>
+    <nav class="navbar">
         <div class="container">
-            <h1>Aprenda Inglês com Inteligência Artificial</h1>
-            <p>Seu curso completo com suporte de IA.</p>
+            <div class="nav-content">
+                <div class="logo">EnglishAI</div>
+                <div class="nav-links">
+                    <a href="#home">Início</a>
+                    <a href="#courses">Cursos</a>
+                    <a href="#about">Sobre</a>
+                    <a href="#contact">Contato</a>
+                </div>
+            </div>
         </div>
-    </header>
+    </nav>
 
-    <main>
-        <section id="intro">
-            <h2>Bem-vindo ao seu curso!</h2>
-            <p>Escolha um nível de aprendizado e comece agora:</p>
-            <button id="beginner">Iniciante</button>
-            <button id="intermediate">Intermediário</button>
-            <button id="advanced">Avançado</button>
-        </section>
+    <main class="main-content">
+        <div class="container">
+            <section class="hero">
+                <h1>Aprenda Inglês com Inteligência Artificial</h1>
+                <p>Curso completo com aulas personalizadas e exercícios práticos</p>
+                <button class="btn btn-primary" onclick="startCourse()">Começar Agora</button>
+            </section>
 
-        <section id="lesson" class="hidden">
-            <h2 id="lesson-title">Título da Aula</h2>
-            <p id="lesson-content">Conteúdo da aula será exibido aqui.</p>
-            <div id="interaction">
-                <label for="user-input">Pratique seu inglês:</label>
-                <input type="text" id="user-input" placeholder="Digite sua resposta aqui...">
-                <button id="submit">Enviar</button>
-            </div>
-            <div id="feedback" class="hidden">
-                <p id="feedback-message"></p>
-            </div>
-        </section>
+            <section class="courses-grid">
+                <div class="course-card">
+                    <div class="course-image">
+                        <img src="/api/placeholder/300/200" alt="Básico">
+                    </div>
+                    <div class="course-content">
+                        <h3>Inglês Básico</h3>
+                        <p>Aprenda o essencial para começar a se comunicar em inglês</p>
+                        <button class="btn btn-primary" onclick="openLesson('basic')">Iniciar</button>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image">
+                        <img src="/api/placeholder/300/200" alt="Intermediário">
+                    </div>
+                    <div class="course-content">
+                        <h3>Inglês Intermediário</h3>
+                        <p>Aperfeiçoe sua fluência e gramática</p>
+                        <button class="btn btn-primary" onclick="openLesson('intermediate')">Iniciar</button>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image">
+                        <img src="/api/placeholder/300/200" alt="Avançado">
+                    </div>
+                    <div class="course-content">
+                        <h3>Inglês Avançado</h3>
+                        <p>Domine o idioma com conversação e vocabulário avançado</p>
+                        <button class="btn btn-primary" onclick="openLesson('advanced')">Iniciar</button>
+                    </div>
+                </div>
+            </section>
+        </div>
     </main>
 
-    <footer>
-        <p>&copy; 2024 Curso de Inglês com IA. Todos os direitos reservados.</p>
-    </footer>
+    <div id="lessonModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 id="lessonTitle">Título da Aula</h2>
+            <div class="lesson-video">
+                <img src="/api/placeholder/800/450" alt="Video placeholder">
+            </div>
+            <div id="lessonContent"></div>
+            <button class="btn btn-primary" onclick="nextLesson()">Próxima Aula</button>
+        </div>
+    </div>
+
+    <script>
+        const lessons = {
+            basic: [
+                {
+                    title: "Introdução ao Inglês",
+                    content: "Nesta aula, vamos aprender os fundamentos básicos do inglês, incluindo pronúncia e alfabeto."
+                },
+                {
+                    title: "Apresentações",
+                    content: "Aprenda a se apresentar e fazer perguntas básicas em inglês."
+                }
+            ],
+            intermediate: [
+                {
+                    title: "Tempos Verbais",
+                    content: "Estudo aprofundado dos principais tempos verbais em inglês."
+                },
+                {
+                    title: "Conversação",
+                    content: "Práticas de diálogo e expressões comuns."
+                }
+            ],
+            advanced: [
+                {
+                    title: "Business English",
+                    content: "Vocabulário e expressões para ambiente profissional."
+                },
+                {
+                    title: "Fluência Avançada",
+                    content: "Técnicas para alcançar fluência nativa."
+                }
+            ]
+        };
+
+        let currentCourse = null;
+        let currentLessonIndex = 0;
+
+        function startCourse() {
+            openLesson('basic');
+        }
+
+        function openLesson(courseType) {
+            currentCourse = courseType;
+            currentLessonIndex = 0;
+            updateLesson();
+            document.getElementById('lessonModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('lessonModal').style.display = 'none';
+        }
+
+        function updateLesson() {
+            const lesson = lessons[currentCourse][currentLessonIndex];
+            document.getElementById('lessonTitle').textContent = lesson.title;
+            document.getElementById('lessonContent').textContent = lesson.content;
+        }
+
+        function nextLesson() {
+            if (currentLessonIndex < lessons[currentCourse].length - 1) {
+                currentLessonIndex++;
+                updateLesson();
+            } else {
+                alert('Parabéns! Você completou este módulo!');
+                closeModal();
+            }
+        }
+
+        // Fechar modal quando clicar fora dele
+        window.onclick = function(event) {
+            const modal = document.getElementById('lessonModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
 </body>
 </html>
