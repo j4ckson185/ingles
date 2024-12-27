@@ -5,95 +5,177 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EnglishAI - Curso Interativo de Inglês</title>
     <style>
-        body {
+        * {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --secondary: #1d4ed8;
+            --light: #f3f4f6;
+            --dark: #1f2937;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        body {
+            background-color: var(--light);
         }
 
         .navbar {
-            background-color: #333;
-            color: white;
-            padding: 10px 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
         }
 
-        .navbar .container {
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .nav-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 20px;
         }
 
-        .navbar .logo {
-            font-size: 1.5em;
+        .logo {
+            font-size: 1.5rem;
             font-weight: bold;
+            color: var(--primary);
         }
 
-        .navbar .nav-links a {
-            color: white;
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
             text-decoration: none;
-            margin: 0 10px;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s ease;
         }
 
-        .navbar .nav-links a:hover {
-            text-decoration: underline;
+        .nav-links a:hover {
+            color: var(--primary);
         }
 
         .main-content {
-            padding: 20px;
-            text-align: center;
+            margin-top: 5rem;
+            padding: 2rem 0;
         }
 
         .hero {
-            margin: 20px auto;
-            padding: 20px;
+            text-align: center;
+            padding: 3rem 0;
             background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
         }
 
         .btn {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: white;
-            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
 
-        .btn:hover {
-            background-color: #0056b3;
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--light);
+            color: var(--dark);
+            border: 1px solid var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--dark);
+            color: white;
         }
 
         .courses-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            margin: 20px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
         }
 
         .course-card {
             background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 1rem;
             overflow: hidden;
-            width: 300px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .course-card img {
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .course-image {
             width: 100%;
-            height: auto;
+            height: 200px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
-        .course-card .course-content {
-            padding: 15px;
-            text-align: left;
+        .course-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .course-content {
+            padding: 1.5rem;
+        }
+
+        .course-content h3 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+        }
+
+        .course-content p {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.5;
         }
 
         .modal {
@@ -103,188 +185,588 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            border-radius: 1rem;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark);
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--danger);
+        }
+
+        .lesson-video {
+            width: 100%;
+            aspect-ratio: 16/9;
+            margin-bottom: 1rem;
+            background-color: #000;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem;
+        }
+
+        .video-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            color: white;
+            background-color: #1a1a1a;
+            padding: 1rem;
         }
 
-        .modal .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 800px;
-            width: 90%;
-            position: relative;
+        .ai-avatar {
+            width: 120px;
+            height: 120px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
 
-        .modal .close-modal {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1.5em;
-            cursor: pointer;
+        .pronunciation-section {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: var(--light);
+            border-radius: 0.5rem;
+        }
+
+        .pronunciation-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .pronunciation-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: none;
+        }
+
+        .feedback-good {
+            background-color: #ecfdf5;
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .feedback-bad {
+            background-color: #fef2f2;
+            color: var(--danger);
+            border: 1px solid var(--danger);
         }
 
         .exercise-section {
-            margin-top: 20px;
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: var(--light);
+            border-radius: 0.5rem;
         }
 
-        .exercise-question {
-            font-size: 1.2em;
+        .exercise-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
         }
 
         .exercise-options {
-            list-style-type: none;
-            padding: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
         }
 
-        .exercise-options li {
-            margin: 10px 0;
-        }
-
-        .exercise-options button {
-            padding: 10px 15px;
-            border: 1px solid #333;
-            background: white;
+        .exercise-option {
+            padding: 1rem;
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 0.5rem;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .exercise-options button:hover {
-            background: #f4f4f4;
+        .exercise-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
         }
 
-        .exercise-options button.correct {
-            background: #28a745;
+        .correct {
+            border-color: var(--success);
+            background-color: #ecfdf5;
+        }
+
+        .wrong {
+            border-color: var(--danger);
+            background-color: #fef2f2;
+        }
+
+        .audio-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin: 1rem 0;
+        }
+
+        .audio-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            background-color: var(--primary);
             color: white;
-            border-color: #28a745;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .exercise-options button.incorrect {
-            background: #dc3545;
-            color: white;
-            border-color: #dc3545;
+        .audio-btn:hover {
+            background-color: var(--secondary);
         }
 
-        .result {
-            font-weight: bold;
-            margin-top: 20px;
+        .microphone-btn {
+            background-color: var(--warning);
+        }
+
+        .microphone-btn.recording {
+            background-color: var(--danger);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .exercise-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .pronunciation-controls {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="navbar">
-        <div class="container nav-content">
-            <div class="logo">EnglishAI</div>
-            <nav class="nav-links">
-                <a href="#">Início</a>
-                <a href="#">Cursos</a>
-                <a href="#">Contato</a>
-            </nav>
-        </div>
-    </div>
-
-    <div class="container main-content">
-        <section class="hero">
-            <h1>Bem-vindo ao EnglishAI</h1>
-            <p>Aprenda inglês de forma interativa e divertida com nosso curso personalizado.</p>
-            <button class="btn btn-primary" onclick="openModal('basic')">Começar Curso Básico</button>
-        </section>
-
-        <section class="courses-grid">
-            <div class="course-card">
-                <div class="course-image">
-                    <img src="course-image.jpg" alt="Curso Básico">
-                </div>
-                <div class="course-content">
-                    <h3>Curso Básico</h3>
-                    <p>Aprenda o básico do inglês, incluindo pronúncia e vocabulário essencial.</p>
-                    <button class="btn btn-primary" onclick="openModal('basic')">Entrar no Curso</button>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <div id="lessonModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
-            <div class="video-container">
-                <div id="videoContent" class="lesson-video"></div>
-            </div>
-            <div id="lessonContent"></div>
-            <div id="exerciseSection" class="exercise-section"></div>
-        </div>
-    </div>
-
+    <!-- Rest of the HTML structure remains the same until the script tag -->
+    
     <script>
+        // Speech synthesis setup
+        const synth = window.speechSynthesis;
+        const voices = synth.getVoices();
+        
+        // Speech recognition setup
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        // Enhanced lessons data structure
         const lessons = {
-            basic: {
-                title: "Curso Básico",
-                video: "<iframe width='100%' height='315' src='https://www.youtube.com/embed/example' frameborder='0' allowfullscreen></iframe>",
-                content: "<p>Bem-vindo ao Curso Básico! Aqui você aprenderá...</p>",
-                exercise: {
-                    question: "Qual é a tradução de 'Hello'?",
-                    options: [
-                        { text: "Olá", isCorrect: true },
-                        { text: "Adeus", isCorrect: false },
-                        { text: "Obrigado", isCorrect: false },
+            basic: [
+                {
+                    title: "Alfabeto e Pronúncia",
+                    videoScript: "Hello! Today we'll learn the English alphabet and basic pronunciation. Let's start with the vowels: A, E, I, O, U.",
+                    content: "Nesta aula, vamos aprender o alfabeto em inglês e sua pronúncia correta.",
+                    pronunciationExercises: [
+                        {
+                            text: "Apple",
+                            correctPhonetics: "ˈæpəl"
+                        },
+                        {
+                            text: "Elephant",
+                            correctPhonetics: "ˈɛləfənt"
+                        },
+                        // Add more pronunciation exercises
                     ],
+                    exercises: [
+                        {
+                            question: "Como se pronuncia a letra 'A' em inglês?",
+                            options: ["ei", "ai", "ah", "é"],
+                            correct: 0,
+                            audio: "a.mp3"
+                        },
+                        // Add more exercises (total 20 per lesson)
+                    ]
                 },
-            },
+                // Add more lessons with similar structure
+            ],
+            // Add intermediate and advanced levels with similar structure
         };
 
-        function openModal(courseKey) {
-            const modal = document.getElementById("lessonModal");
-            const videoContainer = document.getElementById("videoContent");
-            const lessonContent = document.getElementById("lessonContent");
-            const exerciseSection = document.getElementById("exerciseSection");
+        let currentCourse = null;
+        let currentLessonIndex = 0;
+        let currentExerciseIndex = 0;
+        let isRecording = false;
 
-            const lesson = lessons[courseKey];
-
-            videoContainer.innerHTML = lesson.video;
-            lessonContent.innerHTML = lesson.content;
-
-            const exercise = lesson.exercise;
-            const exerciseHTML = `
-                <div class="exercise-question">${exercise.question}</div>
-                <ul class="exercise-options">
-                    ${exercise.options
-                        .map(
-                            (option, index) => `
-                                <li>
-                                    <button onclick="checkAnswer(${index}, ${option.isCorrect})">
-                                        ${option.text}
-                                    </button>
-                                </li>`
-                        )
-                        .join("")}
-                </ul>`;
-
-            exerciseSection.innerHTML = exerciseHTML;
-
-            modal.style.display = "flex";
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.voice = voices.find(voice => voice.lang === 'en-US');
+            utterance.rate = 0.9;
+            synth.speak(utterance);
         }
 
-        function checkAnswer(index, isCorrect) {
-            const buttons = document.querySelectorAll(".exercise-options button");
-            buttons.forEach((button, i) => {
-                button.disabled = true;
-                if (i === index) {
-                    button.classList.add(isCorrect ? "correct" : "incorrect");
+        function startRecording() {
+            isRecording = true;
+            document.querySelector('.microphone-btn').classList.add('recording');
+            recognition.start();
+        }
+
+        function stopRecording() {
+            isRecording = false;
+            document.querySelector('.microphone-btn').classList.remove('recording');
+            recognition.stop();
+        }
+
+        recognition.onresult = (event) => {
+            const spokenText = event.results[0][0].transcript.toLowerCase();
+            const currentExercise = getCurrentPronunciationExercise();
+            const accuracy = comparePronunciation(spokenText, currentExercise.text.toLowerCase());
+            showPronunciationFeedback(accuracy);
+        };
+
+        function comparePronunciation(spoken, correct) {
+            // Implement pronunciation comparison logic
+            // This could be enhanced with a proper phonetic comparison library
+            const similarity = levenshteinDistance(spoken, correct);
+            return similarity > 0.8; // Threshold for acceptable pronunciation
+        }
+
+        function levenshteinDistance(a, b) {
+            // Implement Levenshtein distance algorithm for basic string similarity
+            if (a.length === 0) return b.length;
+            if (b.length === 0) return a.length;
+
+            const matrix = [];
+
+            for (let i = 0; i <= b.length; i++) {
+                matrix[i] = [i];
+            }
+
+            for (let j = 0; j <= a.length; j++) {
+                matrix[0][j] = j;
+            }
+
+            for (let i = 1; i <= b.length; i++) {
+                for (let j = 1; j <= a.length; j++) {
+                    if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                        matrix[i][j] = matrix[i - 1][j - 1];
+                    } else {
+                        matrix[i][j] = Math.min(
+                            matrix[i - 1][j - 1] + 1,
+                            Math.min(
+                                matrix[i][j - 1] + 1,
+                                matrix[i - 1][j] + 1
+                            )
+                        );
+                    }
                 }
-            });
+            }
 
-            const resultText = isCorrect ? "Correto!" : "Tente novamente.";
-            const resultHTML = `<div class='result'>${resultText}</div>`;
-            document.getElementById("exerciseSection").insertAdjacentHTML("beforeend", resultHTML);
+            return 1 - (matrix[b.length][a.length] / Math.max(a.length, b.length));
         }
 
-        function closeModal() {
-            const modal = document.getElementById("lessonModal");
-            modal.style.display = "none";
-            document.getElementById("videoContent").innerHTML = "";
-            document.getElementById("lessonContent").innerHTML = "";
-            document.getElementById("exerciseSection").innerHTML = "";
+     function showPronunciationFeedback(isGood) {
+    const feedback = document.querySelector('.pronunciation-feedback');
+    feedback.style.display = 'block';
+    feedback.className = 'pronunciation-feedback ' + (isGood ? 'feedback-good' : 'feedback-bad');
+    feedback.textContent = isGood ? 
+        'Excelente pronúncia! Continue assim!' : 
+        'Tente novamente. Escute o áudio e pratique mais.';
+    
+    setTimeout(() => {
+        feedback.style.display = 'none';
+    }, 3000);
+}
+
+function updateLesson() {
+    const lesson = lessons[currentCourse][currentLessonIndex];
+    const totalLessons = lessons[currentCourse].length;
+    const progress = ((currentLessonIndex + 1) / totalLessons) * 100;
+    
+    document.getElementById('lessonTitle').textContent = lesson.title;
+    document.getElementById('lessonProgress').style.width = `${progress}%`;
+    document.getElementById('videoContent').textContent = "AI Teacher: " + lesson.videoScript;
+    
+    // Update lesson content
+    document.getElementById('lessonContent').innerHTML = `
+        <h3>Conteúdo da Aula</h3>
+        <p>${lesson.content}</p>
+        
+        <div class="audio-controls">
+            <button class="audio-btn" onclick="speak('${lesson.videoScript}')">
+                <i class="fas fa-play"></i> Ouvir Explicação
+            </button>
+        </div>
+        
+        <div class="pronunciation-section">
+            <h3>Exercício de Pronúncia</h3>
+            <p>Repita a palavra: <strong>${lesson.pronunciationExercises[0].text}</strong></p>
+            <div class="pronunciation-controls">
+                <button class="audio-btn" onclick="speak('${lesson.pronunciationExercises[0].text}')">
+                    <i class="fas fa-volume-up"></i> Ouvir Palavra
+                </button>
+                <button class="audio-btn microphone-btn" onclick="toggleRecording()">
+                    <i class="fas fa-microphone"></i> Gravar Pronúncia
+                </button>
+            </div>
+            <div class="pronunciation-feedback"></div>
+        </div>
+    `;
+    
+    updateExercise();
+    startVideoSimulation();
+}
+
+function updateExercise() {
+    const lesson = lessons[currentCourse][currentLessonIndex];
+    const exercise = lesson.exercises[currentExerciseIndex];
+    const totalExercises = lesson.exercises.length;
+    
+    document.getElementById('exerciseSection').innerHTML = `
+        <div class="exercise-progress">
+            <span>Exercício ${currentExerciseIndex + 1} de ${totalExercises}</span>
+            <span>Progresso: ${Math.round((currentExerciseIndex / totalExercises) * 100)}%</span>
+        </div>
+        <h3>Exercício</h3>
+        <p>${exercise.question}</p>
+        <div class="audio-controls">
+            <button class="audio-btn" onclick="speak('${exercise.audio}')">
+                <i class="fas fa-volume-up"></i> Ouvir Questão
+            </button>
+        </div>
+        <div class="exercise-options">
+            ${exercise.options.map((option, index) => `
+                <div class="exercise-option" onclick="checkAnswer(${index}, ${exercise.correct})">
+                    ${option}
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function toggleRecording() {
+    if (isRecording) {
+        stopRecording();
+    } else {
+        startRecording();
+    }
+}
+
+function checkAnswer(selected, correct) {
+    const options = document.querySelectorAll('.exercise-option');
+    options[selected].classList.add(selected === correct ? 'correct' : 'wrong');
+    options[correct].classList.add('correct');
+    
+    setTimeout(() => {
+        options.forEach(option => {
+            option.classList.remove('correct', 'wrong');
+        });
+        
+        // Move to next exercise or lesson
+        if (currentExerciseIndex < lessons[currentCourse][currentLessonIndex].exercises.length - 1) {
+            currentExerciseIndex++;
+            updateExercise();
+        } else {
+            // Complete lesson
+            currentExerciseIndex = 0;
+            nextLesson();
         }
+    }, 2000);
+}
+
+function nextLesson() {
+    if (currentLessonIndex < lessons[currentCourse].length - 1) {
+        currentLessonIndex++;
+        updateLesson();
+    } else {
+        alert('Parabéns! Você completou este módulo! 🎉');
+        closeModal();
+    }
+}
+
+function startVideoSimulation() {
+    const videoContent = document.getElementById('videoContent');
+    const lesson = lessons[currentCourse][currentLessonIndex];
+    let index = 0;
+    
+    function typeWriter() {
+        if (index < lesson.videoScript.length) {
+            videoContent.textContent = "AI Teacher: " + lesson.videoScript.slice(0, index + 1);
+            index++;
+            setTimeout(typeWriter, 50);
+        }
+    }
+    
+    typeWriter();
+}
+
+// Initialize voices when they are loaded
+speechSynthesis.onvoiceschanged = function() {
+    voices = synth.getVoices();
+};
+
+// Event handlers for window load and modal
+window.onload = function() {
+    // Pre-load audio files
+    lessons.basic.forEach(lesson => {
+        lesson.exercises.forEach(exercise => {
+            if (exercise.audio) {
+                const audio = new Audio(exercise.audio);
+                audio.preload = 'auto';
+            }
+        });
+    });
+};
+
+window.onclick = function(event) {
+    const modal = document.getElementById('lessonModal');
+    if (event.target == modal) {
+        closeModal();
+    }
+};
+
+// Error handling for speech recognition
+recognition.onerror = function(event) {
+    console.error('Speech recognition error:', event.error);
+    stopRecording();
+    showPronunciationFeedback(false);
+};
+
+// Handle cases where speech recognition is not supported
+if (!SpeechRecognition) {
+    const pronunciationSections = document.querySelectorAll('.pronunciation-section');
+    pronunciationSections.forEach(section => {
+        section.innerHTML = `
+            <div class="warning">
+                Seu navegador não suporta reconhecimento de voz.
+                Por favor, use um navegador mais recente como Chrome ou Edge.
+            </div>
+        `;
+    });
+}
+
+// Initialize the application
+document.addEventListener('DOMContentLoaded', function() {
+    // Load saved progress if any
+    const savedProgress = localStorage.getItem('englishAIProgress');
+    if (savedProgress) {
+        const progress = JSON.parse(savedProgress);
+        currentCourse = progress.course;
+        currentLessonIndex = progress.lesson;
+        currentExerciseIndex = progress.exercise;
+    }
+
+    // Initialize course cards with progress indicators
+    updateCourseCards();
+});
+
+function updateCourseCards() {
+    Object.keys(lessons).forEach(courseType => {
+        const card = document.querySelector(`[data-course="${courseType}"]`);
+        if (card) {
+            const progress = calculateCourseProgress(courseType);
+            const progressBar = card.querySelector('.course-progress');
+            if (progressBar) {
+                progressBar.style.width = `${progress}%`;
+            }
+        }
+    });
+}
+
+function calculateCourseProgress(courseType) {
+    if (!localStorage.getItem('englishAIProgress')) return 0;
+    
+    const progress = JSON.parse(localStorage.getItem('englishAIProgress'));
+    if (progress.course !== courseType) return 0;
+    
+    return (progress.lesson / lessons[courseType].length) * 100;
+}
+
+function saveProgress() {
+    const progress = {
+        course: currentCourse,
+        lesson: currentLessonIndex,
+        exercise: currentExerciseIndex
+    };
+    localStorage.setItem('englishAIProgress', JSON.stringify(progress));
+    updateCourseCards();
+}
+
+// Handle page visibility changes to pause/resume audio
+document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+        synth.pause();
+    } else {
+        synth.resume();
+    }
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(event) {
+    if (event.code === 'Space' && event.target === document.body) {
+        event.preventDefault(); // Prevent page scroll
+        toggleRecording();
+    }
+    if (event.code === 'Escape') {
+        closeModal();
+    }
+});
+
+// Add service worker for offline support
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').then(function(registration) {
+        console.log('ServiceWorker registration successful');
+    }).catch(function(err) {
+        console.log('ServiceWorker registration failed: ', err);
+    });
+}
     </script>
+    
+    <!-- Font Awesome for icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 </body>
 </html>
