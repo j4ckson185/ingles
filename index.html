@@ -437,20 +437,21 @@
         </div>
     </main>
 
-    <div id="lessonModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
-            <h2 id="lessonTitle">Título da Aula</h2>
-            <div class="lesson-video">
-                <div class="video-container">
-                    <div class="ai-avatar">🤖</div>
-                    <p id="videoContent"></p>
-                </div>
+<div id="lessonModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <h2 id="lessonTitle">Título da Aula</h2>
+        <div class="lesson-video">
+            <div class="video-container">
+                <div class="ai-avatar">🤖</div>
+                <p id="videoContent"></p>
             </div>
-            <div id="lessonContent"></div>
-            <div id="exerciseSection" class="exercise-section"></div>
         </div>
+        <div id="lessonProgress" style="height: 5px; background: var(--primary); width: 0;"></div>
+        <div id="lessonContent"></div>
+        <div id="exerciseSection" class="exercise-section"></div>
     </div>
+</div>
 
     <script>
         // Speech synthesis setup
@@ -588,43 +589,48 @@
             }, 3000);
         }
 
-        function updateLesson() {
-            const lesson = lessons[currentCourse][currentLessonIndex];
-            const totalLessons = lessons[currentCourse].length;
-            const progress = ((currentLessonIndex + 1) / totalLessons) * 100;
-            
-            document.getElementById('lessonTitle').textContent = lesson.title;
-            document.getElementById('lessonProgress').style.width = `${progress}%`;
-            document.getElementById('videoContent').textContent = "AI Teacher: " + lesson.videoScript;
-            
-            document.getElementById('lessonContent').innerHTML = `
-                <h3>Conteúdo da Aula</h3>
-                <p>${lesson.content}</p>
-                
-                <div class="audio-controls">
-                    <button class="audio-btn" onclick="speak('${lesson.videoScript}')">
-                        <i class="fas fa-play"></i> Ouvir Explicação
-                    </button>
-                </div>
-                
-                <div class="pronunciation-section">
-                    <h3>Exercício de Pronúncia</h3>
-                    <p>Repita a palavra: <strong>${lesson.pronunciationExercises[0].text}</strong></p>
-                    <div class="pronunciation-controls">
-                        <button class="audio-btn" onclick="speak('${lesson.pronunciationExercises[0].text}')">
-                            <i class="fas fa-volume-up"></i> Ouvir Palavra
-                        </button>
-                        <button class="audio-btn microphone-btn" onclick="toggleRecording()">
-                            <i class="fas fa-microphone"></i> Gravar Pronúncia
-                        </button>
-                    </div>
-                    <div class="pronunciation-feedback"></div>
-                </div>
-            `;
-            
-            updateExercise();
-            startVideoSimulation();
-        }
+function updateLesson() {
+    const lesson = lessons[currentCourse][currentLessonIndex];
+    const totalLessons = lessons[currentCourse].length;
+    const progress = ((currentLessonIndex + 1) / totalLessons) * 100;
+    
+    document.getElementById('lessonTitle').textContent = lesson.title;
+    
+    const lessonProgress = document.getElementById('lessonProgress');
+    if (lessonProgress) {
+        lessonProgress.style.width = `${progress}%`;
+    }
+    
+    document.getElementById('videoContent').textContent = "AI Teacher: " + lesson.videoScript;
+    
+    document.getElementById('lessonContent').innerHTML = `
+        <h3>Conteúdo da Aula</h3>
+        <p>${lesson.content}</p>
+        
+        <div class="audio-controls">
+            <button class="audio-btn" onclick="speak('${lesson.videoScript}')">
+                <i class="fas fa-play"></i> Ouvir Explicação
+            </button>
+        </div>
+        
+        <div class="pronunciation-section">
+            <h3>Exercício de Pronúncia</h3>
+            <p>Repita a palavra: <strong>${lesson.pronunciationExercises[0].text}</strong></p>
+            <div class="pronunciation-controls">
+                <button class="audio-btn" onclick="speak('${lesson.pronunciationExercises[0].text}')">
+                    <i class="fas fa-volume-up"></i> Ouvir Palavra
+                </button>
+                <button class="audio-btn microphone-btn" onclick="toggleRecording()">
+                    <i class="fas fa-microphone"></i> Gravar Pronúncia
+                </button>
+            </div>
+            <div class="pronunciation-feedback"></div>
+        </div>
+    `;
+    
+    updateExercise();
+    startVideoSimulation();
+}
 
         function updateExercise() {
             const lesson = lessons[currentCourse][currentLessonIndex];
