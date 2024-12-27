@@ -395,7 +395,15 @@
     <script>
         // Speech synthesis setup
         const synth = window.speechSynthesis;
-        const voices = synth.getVoices();
+        let voices = [];
+
+        function loadVoices() {
+        voices = synth.getVoices();
+}
+
+if (speechSynthesis.onvoiceschanged !== undefined) {
+    speechSynthesis.onvoiceschanged = loadVoices;
+}
         
         // Speech recognition setup
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -423,12 +431,13 @@
                         // Add more pronunciation exercises
                     ],
                     exercises: [
-                        {
-                            question: "Como se pronuncia a letra 'A' em inglês?",
-                            options: ["ei", "ai", "ah", "é"],
-                            correct: 0,
-                            audio: "a.mp3"
-                        },
+    {
+        question: "Como se pronuncia a letra 'A' em inglês?",
+        options: ["ei", "ai", "ah", "é"],
+        correct: 0,
+        questionText: "How do you pronounce the letter A in English?"
+    }
+]
                         // Add more exercises (total 20 per lesson)
                     ]
                 },
@@ -442,12 +451,17 @@
         let currentExerciseIndex = 0;
         let isRecording = false;
 
-        function speak(text) {
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.voice = voices.find(voice => voice.lang === 'en-US');
-            utterance.rate = 0.9;
-            synth.speak(utterance);
-        }
+function speak(text) {
+    if (!voices.length) {
+        voices = synth.getVoices();
+    }
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    const englishVoice = voices.find(voice => voice.lang === 'en-US');
+    utterance.voice = englishVoice || voices[0];
+    utterance.rate = 0.9;
+    synth.speak(utterance);
+}
 
         function startRecording() {
             isRecording = true;
@@ -574,7 +588,7 @@ function updateExercise() {
         <h3>Exercício</h3>
         <p>${exercise.question}</p>
         <div class="audio-controls">
-            <button class="audio-btn" onclick="speak('${exercise.audio}')">
+            <button class="audio-btn" onclick="speak('${exercise.questionText}')">
                 <i class="fas fa-volume-up"></i> Ouvir Questão
             </button>
         </div>
@@ -756,14 +770,6 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// Add service worker for offline support
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js').then(function(registration) {
-        console.log('ServiceWorker registration successful');
-    }).catch(function(err) {
-        console.log('ServiceWorker registration failed: ', err);
-    });
-}
     </script>
     
     <!-- Font Awesome for icons -->
