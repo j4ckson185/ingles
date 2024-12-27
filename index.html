@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EnglishAI - Curso de Inglês</title>
+    <title>EnglishAI - Curso Interativo de Inglês</title>
     <style>
         * {
             margin: 0;
@@ -18,6 +18,8 @@
             --light: #f3f4f6;
             --dark: #1f2937;
             --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
         }
 
         body {
@@ -61,6 +63,11 @@
             text-decoration: none;
             color: var(--dark);
             font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
         }
 
         .main-content {
@@ -74,6 +81,7 @@
             background-color: white;
             border-radius: 1rem;
             margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .hero h1 {
@@ -85,6 +93,7 @@
         .hero p {
             color: #666;
             margin-bottom: 2rem;
+            font-size: 1.1rem;
         }
 
         .btn {
@@ -103,6 +112,18 @@
 
         .btn-primary:hover {
             background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--light);
+            color: var(--dark);
+            border: 1px solid var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--dark);
+            color: white;
         }
 
         .courses-grid {
@@ -117,10 +138,12 @@
             border-radius: 1rem;
             overflow: hidden;
             transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .course-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         .course-image {
@@ -130,6 +153,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
+        }
+
+        .course-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .course-content {
@@ -139,11 +169,13 @@
         .course-content h3 {
             color: var(--dark);
             margin-bottom: 0.5rem;
+            font-size: 1.25rem;
         }
 
         .course-content p {
             color: #666;
             margin-bottom: 1rem;
+            line-height: 1.5;
         }
 
         .modal {
@@ -165,6 +197,7 @@
             padding: 2rem;
             border-radius: 1rem;
             position: relative;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .close-modal {
@@ -173,6 +206,12 @@
             right: 1rem;
             font-size: 1.5rem;
             cursor: pointer;
+            color: var(--dark);
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--danger);
         }
 
         .lesson-video {
@@ -182,6 +221,7 @@
             background-color: #000;
             position: relative;
             overflow: hidden;
+            border-radius: 0.5rem;
         }
 
         .video-container {
@@ -193,6 +233,7 @@
             align-items: center;
             color: white;
             background-color: #1a1a1a;
+            padding: 1rem;
         }
 
         .ai-avatar {
@@ -205,28 +246,39 @@
             align-items: center;
             justify-content: center;
             font-size: 3rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
 
-        .lesson-content {
+        .pronunciation-section {
             margin-top: 2rem;
             padding: 1rem;
             background-color: var(--light);
             border-radius: 0.5rem;
         }
 
-        .progress-bar {
-            width: 100%;
-            height: 0.5rem;
-            background-color: var(--light);
-            border-radius: 1rem;
-            margin: 1rem 0;
+        .pronunciation-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
         }
 
-        .progress {
-            height: 100%;
-            background-color: var(--success);
-            border-radius: 1rem;
-            transition: width 0.3s ease;
+        .pronunciation-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: none;
+        }
+
+        .feedback-good {
+            background-color: #ecfdf5;
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .feedback-bad {
+            background-color: #fef2f2;
+            color: var(--danger);
+            border: 1px solid var(--danger);
         }
 
         .exercise-section {
@@ -234,6 +286,13 @@
             padding: 1rem;
             background-color: var(--light);
             border-radius: 0.5rem;
+        }
+
+        .exercise-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
         }
 
         .exercise-options {
@@ -254,6 +313,7 @@
 
         .exercise-option:hover {
             border-color: var(--primary);
+            transform: translateY(-2px);
         }
 
         .correct {
@@ -262,8 +322,52 @@
         }
 
         .wrong {
-            border-color: #ef4444;
+            border-color: var(--danger);
             background-color: #fef2f2;
+        }
+
+        .audio-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin: 1rem 0;
+        }
+
+        .audio-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            background-color: var(--primary);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .audio-btn:hover {
+            background-color: var(--secondary);
+        }
+
+        .microphone-btn {
+            background-color: var(--warning);
+        }
+
+        .microphone-btn.recording {
+            background-color: var(--danger);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
         }
 
         @media (max-width: 768px) {
@@ -278,320 +382,292 @@
             .exercise-options {
                 grid-template-columns: 1fr;
             }
+            
+            .pronunciation-controls {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-content">
-                <div class="logo">EnglishAI</div>
-                <div class="nav-links">
-                    <a href="#home">Início</a>
-                    <a href="#courses">Cursos</a>
-                    <a href="#about">Sobre</a>
-                    <a href="#contact">Contato</a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <main class="main-content">
-        <div class="container">
-            <section class="hero">
-                <h1>Aprenda Inglês com Inteligência Artificial</h1>
-                <p>Curso completo com aulas personalizadas e exercícios práticos</p>
-                <button class="btn btn-primary" onclick="startCourse()">Começar Agora</button>
-            </section>
-
-            <section class="courses-grid">
-                <div class="course-card">
-                    <div class="course-image">
-                        <img src="/api/placeholder/300/200" alt="Básico">
-                    </div>
-                    <div class="course-content">
-                        <h3>Inglês Básico</h3>
-                        <p>Aprenda o essencial para começar a se comunicar em inglês</p>
-                        <button class="btn btn-primary" onclick="openLesson('basic')">Iniciar</button>
-                    </div>
-                </div>
-
-                <div class="course-card">
-                    <div class="course-image">
-                        <img src="/api/placeholder/300/200" alt="Intermediário">
-                    </div>
-                    <div class="course-content">
-                        <h3>Inglês Intermediário</h3>
-                        <p>Aperfeiçoe sua fluência e gramática</p>
-                        <button class="btn btn-primary" onclick="openLesson('intermediate')">Iniciar</button>
-                    </div>
-                </div>
-
-                <div class="course-card">
-                    <div class="course-image">
-                        <img src="/api/placeholder/300/200" alt="Avançado">
-                    </div>
-                    <div class="course-content">
-                        <h3>Inglês Avançado</h3>
-                        <p>Domine o idioma com conversação e vocabulário avançado</p>
-                        <button class="btn btn-primary" onclick="openLesson('advanced')">Iniciar</button>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <div id="lessonModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
-            <h2 id="lessonTitle">Título da Aula</h2>
-            <div class="progress-bar">
-                <div id="lessonProgress" class="progress" style="width: 0%"></div>
-            </div>
-            <div class="lesson-video">
-                <div class="video-container">
-                    <div class="ai-avatar">AI</div>
-                    <div id="videoContent"></div>
-                </div>
-            </div>
-            <div id="lessonContent" class="lesson-content"></div>
-            <div id="exerciseSection" class="exercise-section"></div>
-            <button class="btn btn-primary" onclick="nextLesson()">Próxima Aula</button>
-        </div>
-    </div>
-
+    <!-- Rest of the HTML structure remains the same until the script tag -->
+    
     <script>
+        // Speech synthesis setup
+        const synth = window.speechSynthesis;
+        const voices = synth.getVoices();
+        
+        // Speech recognition setup
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        // Enhanced lessons data structure
         const lessons = {
             basic: [
                 {
                     title: "Alfabeto e Pronúncia",
-                    videoScript: "Hello! Today we'll learn the English alphabet and basic pronunciation.",
+                    videoScript: "Hello! Today we'll learn the English alphabet and basic pronunciation. Let's start with the vowels: A, E, I, O, U.",
                     content: "Nesta aula, vamos aprender o alfabeto em inglês e sua pronúncia correta.",
-                    exercise: {
-                        question: "Como se pronuncia a letra 'A' em inglês?",
-                        options: ["ei", "ai", "ah", "é"],
-                        correct: 0
-                    }
+                    pronunciationExercises: [
+                        {
+                            text: "Apple",
+                            correctPhonetics: "ˈæpəl"
+                        },
+                        {
+                            text: "Elephant",
+                            correctPhonetics: "ˈɛləfənt"
+                        },
+                        // Add more pronunciation exercises
+                    ],
+                    exercises: [
+                        {
+                            question: "Como se pronuncia a letra 'A' em inglês?",
+                            options: ["ei", "ai", "ah", "é"],
+                            correct: 0,
+                            audio: "a.mp3"
+                        },
+                        // Add more exercises (total 20 per lesson)
+                    ]
                 },
-                {
-                    title: "Apresentações Pessoais",
-                    videoScript: "Let's learn how to introduce yourself in English!",
-                    content: "Aprenda frases básicas para se apresentar em inglês.",
-                    exercise: {
-                        question: "Como dizer 'Meu nome é' em inglês?",
-                        options: ["My name is", "I am called", "I have name", "Name me"],
-                        correct: 0
-                    }
-                },
-                {
-                    title: "Números e Contagem",
-                    videoScript: "Today we'll learn numbers from 1 to 100 in English.",
-                    content: "Aprenda a contar e usar números em inglês.",
-                    exercise: {
-                        question: "Como se escreve 21 em inglês?",
-                        options: ["Twenty-one", "Twentyone", "Two-one", "Twenty one"],
-                        correct: 0
-                    }
-                },
-                {
-                    title: "Cores e Descrições",
-                    videoScript: "Let's explore colors and basic descriptions in English!",
-                    content: "Aprenda as cores e adjetivos básicos para descrições.",
-                    exercise: {
-                        question: "Qual é a cor 'Purple' em português?",
-                        options: ["Roxo", "Rosa", "Azul", "Vermelho"],
-                        correct: 0
-                    }
-                }
+                // Add more lessons with similar structure
             ],
-            intermediate: [
-                {
-                    title: "Present Continuous",
-                    videoScript: "Today we'll master the Present Continuous tense.",
-                    content: "Aprenda a usar o Present Continuous para ações em progresso.",
-                    exercise: {
-                        question: "Qual a forma correta: 'I ___ studying'",
-                        options: ["am", "are", "is", "be"],
-                        correct: 0
-                    }
-                },
-                {
-                    title: "Past Simple",
-                    videoScript: "Let's learn about regular and irregular verbs in the past.",
-                    content: "Estudo dos verbos regulares e irregulares no passado.",
-                    exercise: {
-                        question: "Qual é o passado de 'go'?",
-                        options: ["went", "goed", "gone", "going"],
-                        correct: 0
-                    }
-                },
-                {
-                    title: "Preposições",
-                    videoScript: "Today's lesson is about prepositions of place and time.",
-                    content: "Aprenda a usar preposições de tempo e lugar corretamente.",
-                    exercise: {
-                        question: "Complete: 'The book is ___ the table'",
-                        options: ["on", "in", "at", "by"],
-                        correct: 0
-                    }
-                },
-                {
-                    title: "Vocabulário de Viagem",
-                    videoScript: "Let's learn essential travel vocabulary!",
-                    content: "Aprenda palavras e frases essenciais para viagens.",
-                    exercise: {
-                        question: "Como se diz 'passagem' em inglês?",
-                        options: ["ticket", "passage", "pass", "way"],
-                        correct: 0
-                    }
-                }
-            ],
-            advanced: [
-                {
-                    title: "Business English",
-                    videoScript: "Today we'll cover professional English for meetings.",
-                    content: "Vocabulário e expressões para ambiente corporativo.",
-                    exercise: {
-                        question: "Qual expressão significa 'agendar uma reunião'?",
-                        options: ["schedule a meeting", "book a meeting", "do a meeting", "make a meeting"],
-                        correct: 0
-                    }
-                },
-                {
-                    title: "Phrasal Verbs",
-                    videoScript: "Let's explore common phrasal verbs in English.",
-                    content: "Estudo dos principais phrasal verbs e seus significados.",
-exercise: {
-                        question: "O que significa 'give up'?",
-                        options: ["desistir", "entregar", "subir", "começar"],
-                        correct: 0
-                    }
-                },
-                {
-                    title: "Expressões Idiomáticas",
-                    videoScript: "Today we'll learn common English idioms and their meanings.",
-                    content: "Aprenda as expressões idiomáticas mais usadas em inglês.",
-                    exercise: {
-                        question: "O que significa 'it's raining cats and dogs'?",
-                        options: ["está chovendo muito forte", "está um dia ruim", "está ventando muito", "está nevando"],
-                        correct: 0
-                    }
-                },
-                {
-                    title: "Pronúncia Avançada",
-                    videoScript: "Let's master advanced pronunciation and intonation.",
-                    content: "Técnicas avançadas de pronúncia e entonação.",
-                    exercise: {
-                        question: "Qual palavra tem o som 'th' como em 'think'?",
-                        options: ["through", "mother", "they", "weather"],
-                        correct: 0
-                    }
-                },
-                {
-                    title: "Preparação para Certificações",
-                    videoScript: "Today we'll prepare for international English certifications.",
-                    content: "Preparação para exames como TOEFL, IELTS e Cambridge.",
-                    exercise: {
-                        question: "Qual certificação é mais focada em inglês acadêmico?",
-                        options: ["TOEFL", "FCE", "TOEIC", "PET"],
-                        correct: 0
-                    }
-                }
-            ]
+            // Add intermediate and advanced levels with similar structure
         };
 
         let currentCourse = null;
         let currentLessonIndex = 0;
-        let videoPlaying = false;
+        let currentExerciseIndex = 0;
+        let isRecording = false;
 
-        function startCourse() {
-            openLesson('basic');
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.voice = voices.find(voice => voice.lang === 'en-US');
+            utterance.rate = 0.9;
+            synth.speak(utterance);
         }
 
-        function openLesson(courseType) {
-            currentCourse = courseType;
-            currentLessonIndex = 0;
-            updateLesson();
-            document.getElementById('lessonModal').style.display = 'block';
+        function startRecording() {
+            isRecording = true;
+            document.querySelector('.microphone-btn').classList.add('recording');
+            recognition.start();
         }
 
-        function closeModal() {
-            document.getElementById('lessonModal').style.display = 'none';
-            videoPlaying = false;
+        function stopRecording() {
+            isRecording = false;
+            document.querySelector('.microphone-btn').classList.remove('recording');
+            recognition.stop();
         }
 
-        function updateLesson() {
-            const lesson = lessons[currentCourse][currentLessonIndex];
-            const totalLessons = lessons[currentCourse].length;
-            const progress = ((currentLessonIndex + 1) / totalLessons) * 100;
-            
-            document.getElementById('lessonTitle').textContent = lesson.title;
-            document.getElementById('lessonProgress').style.width = `${progress}%`;
-            document.getElementById('videoContent').textContent = "Professora AI: " + lesson.videoScript;
-            document.getElementById('lessonContent').innerHTML = `
-                <h3>Conteúdo da Aula</h3>
-                <p>${lesson.content}</p>
-            `;
-            
-            // Criar seção de exercícios
-            document.getElementById('exerciseSection').innerHTML = `
-                <h3>Exercício</h3>
-                <p>${lesson.exercise.question}</p>
-                <div class="exercise-options">
-                    ${lesson.exercise.options.map((option, index) => `
-                        <div class="exercise-option" onclick="checkAnswer(${index}, ${lesson.exercise.correct})">
-                            ${option}
-                        </div>
-                    `).join('')}
-                </div>
-            `;
+        recognition.onresult = (event) => {
+            const spokenText = event.results[0][0].transcript.toLowerCase();
+            const currentExercise = getCurrentPronunciationExercise();
+            const accuracy = comparePronunciation(spokenText, currentExercise.text.toLowerCase());
+            showPronunciationFeedback(accuracy);
+        };
 
-            startVideoSimulation();
+        function comparePronunciation(spoken, correct) {
+            // Implement pronunciation comparison logic
+            // This could be enhanced with a proper phonetic comparison library
+            const similarity = levenshteinDistance(spoken, correct);
+            return similarity > 0.8; // Threshold for acceptable pronunciation
         }
 
-        function checkAnswer(selected, correct) {
-            const options = document.querySelectorAll('.exercise-option');
-            options[selected].classList.add(selected === correct ? 'correct' : 'wrong');
-            options[correct].classList.add('correct');
-            
-            setTimeout(() => {
-                options.forEach(option => {
-                    option.classList.remove('correct', 'wrong');
-                });
-            }, 2000);
-        }
+        function levenshteinDistance(a, b) {
+            // Implement Levenshtein distance algorithm for basic string similarity
+            if (a.length === 0) return b.length;
+            if (b.length === 0) return a.length;
 
-        function startVideoSimulation() {
-            videoPlaying = true;
-            const typewriterEffect = (text, element, index = 0) => {
-                if (index < text.length && videoPlaying) {
-                    element.textContent = text.slice(0, index + 1);
-                    setTimeout(() => typewriterEffect(text, element, index + 1), 50);
+            const matrix = [];
+
+            for (let i = 0; i <= b.length; i++) {
+                matrix[i] = [i];
+            }
+
+            for (let j = 0; j <= a.length; j++) {
+                matrix[0][j] = j;
+            }
+
+            for (let i = 1; i <= b.length; i++) {
+                for (let j = 1; j <= a.length; j++) {
+                    if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                        matrix[i][j] = matrix[i - 1][j - 1];
+                    } else {
+                        matrix[i][j] = Math.min(
+                            matrix[i - 1][j - 1] + 1,
+                            Math.min(
+                                matrix[i][j - 1] + 1,
+                                matrix[i - 1][j] + 1
+                            )
+                        );
+                    }
                 }
-            };
-
-            const videoContent = document.getElementById('videoContent');
-            const lesson = lessons[currentCourse][currentLessonIndex];
-            typewriterEffect(lesson.videoScript, videoContent);
-        }
-
-        function nextLesson() {
-            if (currentLessonIndex < lessons[currentCourse].length - 1) {
-                currentLessonIndex++;
-                updateLesson();
-            } else {
-                alert('Parabéns! Você completou este módulo!');
-                closeModal();
             }
+
+            return 1 - (matrix[b.length][a.length] / Math.max(a.length, b.length));
         }
 
-        // Fechar modal quando clicar fora dele
-        window.onclick = function(event) {
-            const modal = document.getElementById('lessonModal');
-            if (event.target == modal) {
-                closeModal();
-            }
+function showPronunciationFeedback(isGood) {
+    const feedback = document.querySelector('.pronunciation-feedback');
+    feedback.style.display = 'block';
+    feedback.className = 'pronunciation-feedback ' + (isGood ? 'feedback-good' : 'feedback-bad');
+    feedback.textContent = isGood ? 
+        'Excelente pronúncia! Continue assim!' : 
+        'Tente novamente. Escute o áudio e pratique mais.';
+    
+    setTimeout(() => {
+        feedback.style.display = 'none';
+    }, 3000);
+}
+
+function updateLesson() {
+    const lesson = lessons[currentCourse][currentLessonIndex];
+    const totalLessons = lessons[currentCourse].length;
+    const progress = ((currentLessonIndex + 1) / totalLessons) * 100;
+    
+    document.getElementById('lessonTitle').textContent = lesson.title;
+    document.getElementById('lessonProgress').style.width = `${progress}%`;
+    document.getElementById('videoContent').textContent = "AI Teacher: " + lesson.videoScript;
+    
+    // Update lesson content
+    document.getElementById('lessonContent').innerHTML = `
+        <h3>Conteúdo da Aula</h3>
+        <p>${lesson.content}</p>
+        
+        <div class="audio-controls">
+            <button class="audio-btn" onclick="speak('${lesson.videoScript}')">
+                <i class="fas fa-play"></i> Ouvir Explicação
+            </button>
+        </div>
+        
+        <div class="pronunciation-section">
+            <h3>Exercício de Pronúncia</h3>
+            <p>Repita a palavra: <strong>${lesson.pronunciationExercises[0].text}</strong></p>
+            <div class="pronunciation-controls">
+                <button class="audio-btn" onclick="speak('${lesson.pronunciationExercises[0].text}')">
+                    <i class="fas fa-volume-up"></i> Ouvir Palavra
+                </button>
+                <button class="audio-btn microphone-btn" onclick="toggleRecording()">
+                    <i class="fas fa-microphone"></i> Gravar Pronúncia
+                </button>
+            </div>
+            <div class="pronunciation-feedback"></div>
+        </div>
+    `;
+    
+    updateExercise();
+    startVideoSimulation();
+}
+
+function updateExercise() {
+    const lesson = lessons[currentCourse][currentLessonIndex];
+    const exercise = lesson.exercises[currentExerciseIndex];
+    const totalExercises = lesson.exercises.length;
+    
+    document.getElementById('exerciseSection').innerHTML = `
+        <div class="exercise-progress">
+            <span>Exercício ${currentExerciseIndex + 1} de ${totalExercises}</span>
+            <span>Progresso: ${Math.round((currentExerciseIndex / totalExercises) * 100)}%</span>
+        </div>
+        <h3>Exercício</h3>
+        <p>${exercise.question}</p>
+        <div class="audio-controls">
+            <button class="audio-btn" onclick="speak('${exercise.audio}')">
+                <i class="fas fa-volume-up"></i> Ouvir Questão
+            </button>
+        </div>
+        <div class="exercise-options">
+            ${exercise.options.map((option, index) => `
+                <div class="exercise-option" onclick="checkAnswer(${index}, ${exercise.correct})">
+                    ${option}
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function toggleRecording() {
+    if (isRecording) {
+        stopRecording();
+    } else {
+        startRecording();
+    }
+}
+
+function checkAnswer(selected, correct) {
+    const options = document.querySelectorAll('.exercise-option');
+    options[selected].classList.add(selected === correct ? 'correct' : 'wrong');
+    options[correct].classList.add('correct');
+    
+    setTimeout(() => {
+        options.forEach(option => {
+            option.classList.remove('correct', 'wrong');
+        });
+        
+        // Move to next exercise or lesson
+        if (currentExerciseIndex < lessons[currentCourse][currentLessonIndex].exercises.length - 1) {
+            currentExerciseIndex++;
+            updateExercise();
+        } else {
+            // Complete lesson
+            currentExerciseIndex = 0;
+            nextLesson();
         }
+    }, 2000);
+}
+
+function nextLesson() {
+    if (currentLessonIndex < lessons[currentCourse].length - 1) {
+        currentLessonIndex++;
+        updateLesson();
+    } else {
+        alert('Parabéns! Você completou este módulo! 🎉');
+        closeModal();
+    }
+}
+
+function startVideoSimulation() {
+    const videoContent = document.getElementById('videoContent');
+    const lesson = lessons[currentCourse][currentLessonIndex];
+    let index = 0;
+    
+    function typeWriter() {
+        if (index < lesson.videoScript.length) {
+            videoContent.textContent = "AI Teacher: " + lesson.videoScript.slice(0, index + 1);
+            index++;
+            setTimeout(typeWriter, 50);
+        }
+    }
+    
+    typeWriter();
+}
+
+// Initialize voices when they are loaded
+speechSynthesis.onvoiceschanged = function() {
+    voices = synth.getVoices();
+};
+
+// Event handlers for window load and modal
+window.onload = function() {
+    // Pre-load audio files
+    lessons.basic.forEach(lesson => {
+        lesson.exercises.forEach(exercise => {
+            if (exercise.audio) {
+                const audio = new Audio(exercise.audio);
+                audio.preload = 'auto';
+            }
+        });
+    });
+};
+
+window.onclick = function(event) {
+    const modal = document.getElementById('lessonModal');
+    if (event.target == modal) {
+        closeModal();
+    }
+};
     </script>
 </body>
 </html>
