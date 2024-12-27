@@ -17,6 +17,7 @@
             --secondary: #1d4ed8;
             --light: #f3f4f6;
             --dark: #1f2937;
+            --success: #10b981;
         }
 
         body {
@@ -154,6 +155,7 @@
             height: 100%;
             background-color: rgba(0,0,0,0.5);
             z-index: 1000;
+            overflow-y: auto;
         }
 
         .modal-content {
@@ -177,6 +179,91 @@
             width: 100%;
             aspect-ratio: 16/9;
             margin-bottom: 1rem;
+            background-color: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            background-color: #1a1a1a;
+        }
+
+        .ai-avatar {
+            width: 120px;
+            height: 120px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .lesson-content {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: var(--light);
+            border-radius: 0.5rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 0.5rem;
+            background-color: var(--light);
+            border-radius: 1rem;
+            margin: 1rem 0;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--success);
+            border-radius: 1rem;
+            transition: width 0.3s ease;
+        }
+
+        .exercise-section {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: var(--light);
+            border-radius: 0.5rem;
+        }
+
+        .exercise-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .exercise-option {
+            padding: 1rem;
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-option:hover {
+            border-color: var(--primary);
+        }
+
+        .correct {
+            border-color: var(--success);
+            background-color: #ecfdf5;
+        }
+
+        .wrong {
+            border-color: #ef4444;
+            background-color: #fef2f2;
         }
 
         @media (max-width: 768px) {
@@ -186,6 +273,10 @@
             
             .hero h1 {
                 font-size: 2rem;
+            }
+
+            .exercise-options {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -254,10 +345,17 @@
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal()">&times;</span>
             <h2 id="lessonTitle">Título da Aula</h2>
-            <div class="lesson-video">
-                <img src="/api/placeholder/800/450" alt="Video placeholder">
+            <div class="progress-bar">
+                <div id="lessonProgress" class="progress" style="width: 0%"></div>
             </div>
-            <div id="lessonContent"></div>
+            <div class="lesson-video">
+                <div class="video-container">
+                    <div class="ai-avatar">AI</div>
+                    <div id="videoContent"></div>
+                </div>
+            </div>
+            <div id="lessonContent" class="lesson-content"></div>
+            <div id="exerciseSection" class="exercise-section"></div>
             <button class="btn btn-primary" onclick="nextLesson()">Próxima Aula</button>
         </div>
     </div>
@@ -266,38 +364,145 @@
         const lessons = {
             basic: [
                 {
-                    title: "Introdução ao Inglês",
-                    content: "Nesta aula, vamos aprender os fundamentos básicos do inglês, incluindo pronúncia e alfabeto."
+                    title: "Alfabeto e Pronúncia",
+                    videoScript: "Hello! Today we'll learn the English alphabet and basic pronunciation.",
+                    content: "Nesta aula, vamos aprender o alfabeto em inglês e sua pronúncia correta.",
+                    exercise: {
+                        question: "Como se pronuncia a letra 'A' em inglês?",
+                        options: ["ei", "ai", "ah", "é"],
+                        correct: 0
+                    }
                 },
                 {
-                    title: "Apresentações",
-                    content: "Aprenda a se apresentar e fazer perguntas básicas em inglês."
+                    title: "Apresentações Pessoais",
+                    videoScript: "Let's learn how to introduce yourself in English!",
+                    content: "Aprenda frases básicas para se apresentar em inglês.",
+                    exercise: {
+                        question: "Como dizer 'Meu nome é' em inglês?",
+                        options: ["My name is", "I am called", "I have name", "Name me"],
+                        correct: 0
+                    }
+                },
+                {
+                    title: "Números e Contagem",
+                    videoScript: "Today we'll learn numbers from 1 to 100 in English.",
+                    content: "Aprenda a contar e usar números em inglês.",
+                    exercise: {
+                        question: "Como se escreve 21 em inglês?",
+                        options: ["Twenty-one", "Twentyone", "Two-one", "Twenty one"],
+                        correct: 0
+                    }
+                },
+                {
+                    title: "Cores e Descrições",
+                    videoScript: "Let's explore colors and basic descriptions in English!",
+                    content: "Aprenda as cores e adjetivos básicos para descrições.",
+                    exercise: {
+                        question: "Qual é a cor 'Purple' em português?",
+                        options: ["Roxo", "Rosa", "Azul", "Vermelho"],
+                        correct: 0
+                    }
                 }
             ],
             intermediate: [
                 {
-                    title: "Tempos Verbais",
-                    content: "Estudo aprofundado dos principais tempos verbais em inglês."
+                    title: "Present Continuous",
+                    videoScript: "Today we'll master the Present Continuous tense.",
+                    content: "Aprenda a usar o Present Continuous para ações em progresso.",
+                    exercise: {
+                        question: "Qual a forma correta: 'I ___ studying'",
+                        options: ["am", "are", "is", "be"],
+                        correct: 0
+                    }
                 },
                 {
-                    title: "Conversação",
-                    content: "Práticas de diálogo e expressões comuns."
+                    title: "Past Simple",
+                    videoScript: "Let's learn about regular and irregular verbs in the past.",
+                    content: "Estudo dos verbos regulares e irregulares no passado.",
+                    exercise: {
+                        question: "Qual é o passado de 'go'?",
+                        options: ["went", "goed", "gone", "going"],
+                        correct: 0
+                    }
+                },
+                {
+                    title: "Preposições",
+                    videoScript: "Today's lesson is about prepositions of place and time.",
+                    content: "Aprenda a usar preposições de tempo e lugar corretamente.",
+                    exercise: {
+                        question: "Complete: 'The book is ___ the table'",
+                        options: ["on", "in", "at", "by"],
+                        correct: 0
+                    }
+                },
+                {
+                    title: "Vocabulário de Viagem",
+                    videoScript: "Let's learn essential travel vocabulary!",
+                    content: "Aprenda palavras e frases essenciais para viagens.",
+                    exercise: {
+                        question: "Como se diz 'passagem' em inglês?",
+                        options: ["ticket", "passage", "pass", "way"],
+                        correct: 0
+                    }
                 }
             ],
             advanced: [
                 {
                     title: "Business English",
-                    content: "Vocabulário e expressões para ambiente profissional."
+                    videoScript: "Today we'll cover professional English for meetings.",
+                    content: "Vocabulário e expressões para ambiente corporativo.",
+                    exercise: {
+                        question: "Qual expressão significa 'agendar uma reunião'?",
+                        options: ["schedule a meeting", "book a meeting", "do a meeting", "make a meeting"],
+                        correct: 0
+                    }
                 },
                 {
-                    title: "Fluência Avançada",
-                    content: "Técnicas para alcançar fluência nativa."
+                    title: "Phrasal Verbs",
+                    videoScript: "Let's explore common phrasal verbs in English.",
+                    content: "Estudo dos principais phrasal verbs e seus significados.",
+exercise: {
+                        question: "O que significa 'give up'?",
+                        options: ["desistir", "entregar", "subir", "começar"],
+                        correct: 0
+                    }
+                },
+                {
+                    title: "Expressões Idiomáticas",
+                    videoScript: "Today we'll learn common English idioms and their meanings.",
+                    content: "Aprenda as expressões idiomáticas mais usadas em inglês.",
+                    exercise: {
+                        question: "O que significa 'it's raining cats and dogs'?",
+                        options: ["está chovendo muito forte", "está um dia ruim", "está ventando muito", "está nevando"],
+                        correct: 0
+                    }
+                },
+                {
+                    title: "Pronúncia Avançada",
+                    videoScript: "Let's master advanced pronunciation and intonation.",
+                    content: "Técnicas avançadas de pronúncia e entonação.",
+                    exercise: {
+                        question: "Qual palavra tem o som 'th' como em 'think'?",
+                        options: ["through", "mother", "they", "weather"],
+                        correct: 0
+                    }
+                },
+                {
+                    title: "Preparação para Certificações",
+                    videoScript: "Today we'll prepare for international English certifications.",
+                    content: "Preparação para exames como TOEFL, IELTS e Cambridge.",
+                    exercise: {
+                        question: "Qual certificação é mais focada em inglês acadêmico?",
+                        options: ["TOEFL", "FCE", "TOEIC", "PET"],
+                        correct: 0
+                    }
                 }
             ]
         };
 
         let currentCourse = null;
         let currentLessonIndex = 0;
+        let videoPlaying = false;
 
         function startCourse() {
             openLesson('basic');
@@ -312,12 +517,62 @@
 
         function closeModal() {
             document.getElementById('lessonModal').style.display = 'none';
+            videoPlaying = false;
         }
 
         function updateLesson() {
             const lesson = lessons[currentCourse][currentLessonIndex];
+            const totalLessons = lessons[currentCourse].length;
+            const progress = ((currentLessonIndex + 1) / totalLessons) * 100;
+            
             document.getElementById('lessonTitle').textContent = lesson.title;
-            document.getElementById('lessonContent').textContent = lesson.content;
+            document.getElementById('lessonProgress').style.width = `${progress}%`;
+            document.getElementById('videoContent').textContent = "Professora AI: " + lesson.videoScript;
+            document.getElementById('lessonContent').innerHTML = `
+                <h3>Conteúdo da Aula</h3>
+                <p>${lesson.content}</p>
+            `;
+            
+            // Criar seção de exercícios
+            document.getElementById('exerciseSection').innerHTML = `
+                <h3>Exercício</h3>
+                <p>${lesson.exercise.question}</p>
+                <div class="exercise-options">
+                    ${lesson.exercise.options.map((option, index) => `
+                        <div class="exercise-option" onclick="checkAnswer(${index}, ${lesson.exercise.correct})">
+                            ${option}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            startVideoSimulation();
+        }
+
+        function checkAnswer(selected, correct) {
+            const options = document.querySelectorAll('.exercise-option');
+            options[selected].classList.add(selected === correct ? 'correct' : 'wrong');
+            options[correct].classList.add('correct');
+            
+            setTimeout(() => {
+                options.forEach(option => {
+                    option.classList.remove('correct', 'wrong');
+                });
+            }, 2000);
+        }
+
+        function startVideoSimulation() {
+            videoPlaying = true;
+            const typewriterEffect = (text, element, index = 0) => {
+                if (index < text.length && videoPlaying) {
+                    element.textContent = text.slice(0, index + 1);
+                    setTimeout(() => typewriterEffect(text, element, index + 1), 50);
+                }
+            };
+
+            const videoContent = document.getElementById('videoContent');
+            const lesson = lessons[currentCourse][currentLessonIndex];
+            typewriterEffect(lesson.videoScript, videoContent);
         }
 
         function nextLesson() {
